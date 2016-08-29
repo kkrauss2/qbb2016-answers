@@ -1,0 +1,21 @@
+Exercise 1 Solution:
+/Users/cmdb/data/fastq $ fastqc SRR072893.fastq.gz 
+/Users/cmdb/data/fastq $ fastqc -help
+/Users/cmdb/data/fastq $ ls 
+/Users/cmdb/data/fastq $ open SRR072893_fastqc.html
+
+Exercise 2 Solution:
+/Users/cmdb/qbb2016-answers/day1-homework $ hisat2 -p 4 -x /Users/cmdb/data/BDGP6/BDGP6 -U /Users/cmdb/data/fastq/SRR072893.fastq.gz -S SRR072893.sam
+
+Exercise 3 Solution:
+/Users/cmdb/qbb2016-answers/day1-homework $ samtools 
+/Users/cmdb/qbb2016-answers/day1-homework $ samtools view 
+/Users/cmdb/qbb2016-answers/day1-homework $ samtools view -b /Users/cmdb/qbb2016-answers/day1-homework/SRR072893.sam > SRR0722893.bam
+/Users/cmdb/qbb2016-answers/day1-homework $ samtools sort /Users/cmdb/qbb2016-answers/day1-homework/SRR0722893.bam > sorted-SRR0722893.bam
+/Users/cmdb/qbb2016-answers/day1-homework $ ls
+/Users/cmdb/qbb2016-answers/day1-homework $ samtools index /Users/cmdb/qbb2016-answers/day1-homework/sorted-SRR0722893.bam 
+/Users/cmdb/qbb2016-answers/day1-homework $ ls
+
+Exercise 4 Solution:
+/Users/cmdb/qbb2016-answers/day1-homework $ stringtie
+/Users/cmdb/qbb2016-answers/day1-homework $ stringtie /Users/cmdb/qbb2016-answers/day1-homework/sorted-SRR0722893.bam -G /Users/cmdb/data/BDGP6/BDGP6.Ensembl.85.gtf -o quantitated-sorted-SRR072893.bam -p 4 -e -B
