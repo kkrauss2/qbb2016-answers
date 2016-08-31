@@ -7,7 +7,7 @@ t = target_database = (sys.argv[1])
 q = query_database = (sys.argv[2])
 
 query_kmers = {}
-target_kmer_matches = {}
+
 
 for ident, sequence in fasta.FASTAReader(open(q)):
     sequence = sequence.upper()
@@ -30,6 +30,7 @@ for ident, sequence in fasta.FASTAReader(open(q)):
             
             
 for ident, sequence in fasta.FASTAReader(open(t)):
+    target_kmer_matches = {}
     sequence = sequence.upper()
     for i in range(0, len(sequence) - k):
         kmer = sequence[i : i+k]
@@ -39,13 +40,13 @@ for ident, sequence in fasta.FASTAReader(open(t)):
         else:
             continue
         
-for kmer in query_kmers:
-    if kmer in target_kmer_matches:
-        i_q = query_kmers[kmer]
-        i_t = target_kmer_matches[kmer]
-        print "Sequence:", kmer, "\t", "Target Position:", i_t, "\t", "Query Position:", i_q
-    else:
-        continue
+    for kmer in query_kmers:
+        if kmer in target_kmer_matches:
+            i_q = query_kmers[kmer]
+            i_t = target_kmer_matches[kmer]
+            print "Target Sequence Name:", ident, "\t", "Target Position:", i_t, "\t", "Query Position:", i_q, "\t", "k-mer:", kmer
+        else:
+            continue
 
 #print query_kmers               
         
