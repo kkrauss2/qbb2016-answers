@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+
+import sys
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+df_ctab893 = pd.read_table(sys.argv[1])
+
+df_roi = df_ctab893[ "FPKM"] > 0
+df_fpkm = df_ctab893[df_roi]
+#So far this works
+
+df_log = np.log(df_fpkm["FPKM"].values)
+#Works to this point
+
+plt.figure()
+plt.hist(df_log)
+plt.title("Frequency of log FPKM values for SRR072893")
+plt.xlabel("log(FPKM)")
+plt.ylabel("Frequency")
+plt.savefig("homework2.png")
+plt.close()
