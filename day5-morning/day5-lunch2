@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+
+"""
+This script takes a ctab file as the first argument and a tab (chipseq) file
+as the second. The FPKM values for each transcript are then compared to the
+average mean of the tab file and a linear regression is generated. 
+
+The output of this script is a results summary table which provides useful
+information including standard error, t value, r-squared, and other
+statistical models and results.
+"""
+
+import sys
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from statsmodels.api import OLS as regression
+
+ctab_file = pd.read_table(sys.argv[1])
+tab_file = open(sys.argv[2]).readlines()
+FPKM_dict = {}
+tab_dict = {}
+
+for row in tab_file:
+    fields = row.rstrip("\n\r").split("\t")
+    t_name = fields[0]
+    mean = fields[5]
+    if t_name not in tab_dict:
+        tab_dict[t_name]=mean
+#print tab_dict -----THIS WORKS
+
+for row in ctab_file.itertuples():
+    t_name = row[6]
+    FPKM_value = row[12]
+    if t_name not in FPKM_dict:
+        FPKM_dict[t_name]=FPKM_value
+    else:
+        continue
+# print FPKM_dict -----THIS WORKS
+X,Y=[],[]
+for row in tab_file:
+    fields = row.rstrip("\r\n").split("\t")
+    t_name = fields[0]
+    # print t_name ------THIS WORKS
+    if t_name in FPKM_dict:
+        Y.append(FPKM_dict[t_name])
+        X.append(float(tab_dict[t_name]))
+    else:
+        continue
+
+model = regression(Y, X)
+results = model.fit()
+print results.summary()
+
