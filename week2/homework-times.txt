@@ -1,0 +1,24 @@
+velveth for low = 0m0.163s
+velvetg for low = 0m0.238s
+spades for low = 0m5.940s
+
+python for low spades = 0m0.225s
+python for low velvet = 0m0.232s
+
+lastz for low velvet = 0m1.426s
+lastz for low spades = 0m1.457s
+
+
+
+
+velveth for high = 0m12.171s
+velvetg for high = 0m24.467s
+spades for high = 0m50.847s
+
+python for high velvet = 0m0.566s
+python for high spades = 0m0.248s
+
+lastz for high spades = 0m2.005s
+lastz for high velvet = 0m2.063s
+
+Quast = 0:00:07.261441
