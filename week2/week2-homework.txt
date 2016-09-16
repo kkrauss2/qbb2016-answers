@@ -1,0 +1,24 @@
+Input: /Users/cmdb/qbb2016-answers/week2/velveth_update/contigs.fa
+Number of Contigs: 303
+Maximum Contig: 998
+Minimum Contig: 61
+Average Contig Length: 187.9669967
+N50: 255
+Input: /Users/cmdb/qbb2016-answers/week2/spades_assembly/contigs.fasta
+Number of Contigs: 128
+Maximum Contig: 1737
+Minimum Contig: 207
+Average Contig Length: 389.2109375
+N50: 374
+Input: /Users/cmdb/qbb2016-answers/week2/velveth_high/contigs.fa
+Number of Contigs: 16
+Maximum Contig: 33235
+Minimum Contig: 61
+Average Contig Length: 6269.3125
+N50: 33235
+Input: /Users/cmdb/qbb2016-answers/week2/spades_high/contigs.fasta
+Number of Contigs: 1
+Maximum Contig: 100000
+Minimum Contig: 100000
+Average Contig Length: 100000.0
+N50: 100000
