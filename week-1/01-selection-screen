@@ -1,0 +1,193 @@
+#!/usr/bin/env python
+
+import sys
+import fastaP
+from itertools import cycle
+import numpy as np
+import scipy.stats as stats
+import matplotlib.pyplot as plt
+
+nuc = fastaP.FASTAReader(open(sys.argv[1]))
+queryfile = fastaP.FASTAReader(open(sys.argv[2]))
+
+codon_table = {
+    'ATA':'I', 'ATC':'I', 'ATT':'I', 'ATG':'M',
+    'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACT':'T',
+    'AAC':'N', 'AAT':'N', 'AAA':'K', 'AAG':'K',
+    'AGC':'S', 'AGT':'S', 'AGA':'R', 'AGG':'R',
+    'CTA':'L', 'CTC':'L', 'CTG':'L', 'CTT':'L',
+    'CCA':'P', 'CCC':'P', 'CCG':'P', 'CCT':'P',
+    'CAC':'H', 'CAT':'H', 'CAA':'Q', 'CAG':'Q',
+    'CGA':'R', 'CGC':'R', 'CGG':'R', 'CGT':'R',
+    'GTA':'V', 'GTC':'V', 'GTG':'V', 'GTT':'V',
+    'GCA':'A', 'GCC':'A', 'GCG':'A', 'GCT':'A',
+    'GAC':'D', 'GAT':'D', 'GAA':'E', 'GAG':'E',
+    'GGA':'G', 'GGC':'G', 'GGG':'G', 'GGT':'G',
+    'TCA':'S', 'TCC':'S', 'TCG':'S', 'TCT':'S',
+    'TTC':'F', 'TTT':'F', 'TTA':'L', 'TTG':'L',
+    'TAC':'Y', 'TAT':'Y', 'TAA':'_', 'TAG':'_',
+    'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W',
+    }
+
+
+query = []
+n = 0
+sequences = []
+synonymous = {}
+nonsynonymous = {}
+
+###We know the query sequence is the first sequence in the new nucleotide alignment file that we generated, so we can assign it to an empty list and assign the rest of the sequences to be compared against the query to a different list
+
+for identifier, sequence in nuc:
+    sequences = [sequence[i:i+3] for i in range(0, len(sequence), 3)]
+    
+for identifier, sequence in queryfile:
+    query = [sequence[i:i+3] for i in range(0, len(sequence), 3)]
+    
+for index, i in enumerate(query):
+    synonymous[index] = 0
+    nonsynonymous[index] = 0
+index = 0
+
+mutation_dict = {}
+
+for (s,q) in zip(sequences, cycle(query)):
+    if s not in codon_table:
+        continue
+    elif codon_table[s] == codon_table[q]:
+        if s == q:
+            continue
+        # print location, "match"
+        else:
+            # print location, "synonymous"
+            synonymous[index] += 1
+    else:
+        # print location, "nonsynonymous"
+        nonsynonymous[index] += 1
+    if index <= 3427:
+        index += 3
+    else:
+        index = 0    
+# print synonymous
+# print nonsynonymous
+#
+
+dN_dS = []
+
+for index in synonymous and nonsynonymous:
+    dN_dS.append((synonymous[index], nonsynonymous[index]))
+    
+# print dN_dS
+
+d_list = []
+
+for item in dN_dS:
+    d_list.append(item[1]-item[0])
+    
+key = []
+for index in synonymous:
+    key.append(index)
+    
+array = np.array(d_list)
+
+z_score = stats.zscore(array)
+    
+plt.figure()
+plt.scatter(key, z_score)
+plt.title("Z Scores by Codon Position")
+plt.xlabel("Position of Codon")
+plt.ylabel("Z Score")
+plt.savefig("ZScorePlot.png")
+plt.close
+
+"""
+Below is code that I had been working on. I tried troubleshooting this for 6 days and could
+not get it to work and chose to start afresh with what is shown above. I wanted
+to keep what I had so you could see my thoughts and where I was trying to go with
+the code
+"""
+
+# for identifier2, seq2 in queryfile:
+#     query.append(seq2)
+#
+# # query_codon = query[position:position+3]
+#
+# for identifier, sequence in nuc:
+#     sequences.append(sequence)
+#
+# # print query
+# # print sequences
+#
+# ###This creates a dictionary where the key is the codon position in order and the value is either "match", "dN", or "dS" indicating the type of location present for that codon position in all 126 of our alignments (because we are not counting the query here as it was not in our sequences list... that was the 127th alignment)
+#
+# mutation_dict = {}
+# seq_codon = []
+# query_codon = []
+# t = 0
+#
+# for alignment in sequences:
+#     # location = 1
+#     # alignment = sequences[t]
+#     # t += 1
+#     # print "here"
+#     for position in range(0, len(sequences)-3, 3):
+#         # print "here"
+#         seq_codon.append(alignment[position:position+3])
+# for position2 in range(0, len(query)-3, 3):
+#     query_codon.append( query[position2:position2+3])
+#         # print query_codon
+# print query_codon
+    
+        # if codon_table[seq_codon] == codon_table[query_codon]:
+        #     if seq_codon == query_codon:
+        #         # print location, "match"
+        #         if location not in mutation_dict:
+        #             mutation_dict[location] = [("match")]
+        #         else:
+        #             mutation_dict[location].append(("match"))
+        #         location += 1
+        #     else:
+        #         # print location, "synonymous"
+        #         if location not in mutation_dict:
+        #             mutation_dict[location] = [("dS")]
+        #         else:
+        #             mutation_dict[location].append(("dS"))
+        #         location += 1
+        # else:
+        #     # print location, "nonsynonymous"
+        #     if location not in mutation_dict:
+        #         mutation_dict[location] = [("dN")]
+        #     else:
+        #         mutation_dict[location].append(("dN"))
+        #     location += 1
+#
+# # print mutation_dict
+# dS = []
+# dN = []
+# # print mutation_dict
+# # count = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41]
+#
+# print query_codon
+#
+# # for mutation_type in mutation_dict[iter(count)]:
+# #     w = 1
+# #     if w < 42:
+# #         no_mutation = mutation_dict[w].count("match")
+# #         synonymous = mutation_dict[w].count("dS")
+# #         nonsynonymous = mutation_dict[w].count("dN")
+# #         w += 1
+# #     else:
+# #         continue
+# #     print no_mutation
+#
+# for location, mutation_type in mutation_dict.iteritems():
+#     for k in mutation_dict.keys():
+#         for mutation_type in mutation_dict[k]:
+#        # w = 1
+#             no_mutation = mutation_dict[k].count("match")
+#             synonymous = mutation_dict[k].count("dS")
+#             nonsynonymous = mutation_dict[k].count("dN")
+#
+#        # w += 1
+#
+#         # print no_mutation
