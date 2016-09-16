@@ -39,15 +39,14 @@ half_g = sum_contig/2
 length_so_far = 0
 
 for item in contig_list:
-    if length_so_far < half_g:
-        length_so_far += item
-    elif length_so_far >= half_g:
+    length_so_far += item
+    if length_so_far >= half_g:
         n50 = item
         break
     else:
         continue
 
-
+print "Input:", sys.argv[1]
 print "Number of Contigs:", count
 print "Maximum Contig:", max_contig 
 print "Minimum Contig:", min_contig 
