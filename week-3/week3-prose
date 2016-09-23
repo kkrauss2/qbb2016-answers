@@ -1,0 +1,7 @@
+SnpEff should be backwards compatible. After trouble shooting for two hours, I could not get SnpEff to compare my vcf files with the mouse genome, even after downloading the mm9 genome as stated on the class website. The error generated said GC overhead limit exceeded no matter what settings I tried to use. I have pushed my original vcf files, my sorted vcf files, and the empty snpEff files, because though the program did not work, it did generate empty files because it seemed to want to convince me that it was working hard. 
+
+
+What I would have liked to have seen would have been a file listing all the variants in a vcf format. It should have appended the vcf file we fed into it with the predicted effect of each variant. Had it done this, I would have been able to read this file and analyze the data and provide you with an analysis of what each variant was causing. 
+
+
+This could have been done with the mm10 genome, but it would not have been as accurate as the file was using the mm9 genome for their reference. Trying to run our vcf files against the mm10 genome would have ended with errors and improper matches.
